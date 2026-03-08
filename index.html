@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Termux YouTube Live Generator</title>
+<title>Termux YouTube Live Step Guide</title>
 <style>
 body{
     font-family: Arial;
@@ -23,11 +23,11 @@ input{
     border:none;
 }
 button{
-    padding:10px 20px;
+    padding:8px 16px;
     margin-top:10px;
     border:none;
-    border-radius:8px;
-    background:red;
+    border-radius:6px;
+    background:#22c55e;
     color:white;
     cursor:pointer;
 }
@@ -46,23 +46,19 @@ textarea{
     border-radius:10px;
     text-align:left;
 }
-.copy{
-    background:#22c55e;
-    margin-left:10px;
-}
-#steps{display:none;}
+.copy{margin-left:10px;}
 </style>
 </head>
 <body>
 <div class="container">
 <h2>📺 Termux YouTube Live Step Guide</h2>
 
-<input id="video" placeholder="Video Name (example: Tarikulyt90.mp4)">
+<input id="video" placeholder="Video Name (example: abcde.mp4)">
 <input id="key" placeholder="Stream Key">
 <br>
 <button onclick="generate()">Generate Commands</button>
 
-<div id="steps">
+<div id="steps" style="display:none;">
 
 <!-- Step 1 -->
 <div class="box">
@@ -75,38 +71,40 @@ textarea{
 
 <textarea id="cmd3" readonly>termux-setup-storage</textarea>
 <button class="copy" onclick="copy('cmd3')">Copy</button>
-
-<p>📌 Press Allow to give storage access</p>
+<p>📌 Allow storage access</p>
 </div>
 
 <!-- Step 2 -->
 <div class="box">
-<h3>🔴 Step 2: Check Video File</h3>
-<p>Check the Download folder:</p>
+<h3>🔴 Step 2: ভিডিও ফাইল রাখুন</h3>
+<p>আপনার ভিডিও রাখতে হবে:</p>
+<textarea id="videoInternal" readonly>Internal Storage > Download > abcde.mp4</textarea>
+
+<p>Termux এ চেক করুন:</p>
 <textarea id="checkDownload" readonly>ls /storage/emulated/0/Download/</textarea>
 <button class="copy" onclick="copy('checkDownload')">Copy</button>
+<p>এখানে abcde.mp4 দেখতে হবে।</p>
 </div>
 
 <!-- Step 3 -->
 <div class="box">
-<h3>🎥 Step 3: Start Live</h3>
-<textarea id="liveStart" readonly></textarea>
-<button class="copy" onclick="copy('liveStart')">Copy</button>
+<h3>🔴 Step 3: YouTube Live প্রস্তুত করুন</h3>
+<p>YouTube Studio খুলুন, Go Live এ যান, লাইভ পেজ খোলা রাখুন।</p>
 </div>
 
 <!-- Step 4 -->
 <div class="box">
-<h3>🔁 Step 4: Loop Live</h3>
-<textarea id="loopLive" readonly></textarea>
-<button class="copy" onclick="copy('loopLive')">Copy</button>
-<p>💡 This command will repeat the video indefinitely for YouTube Live.</p>
+<h3>🔴 Step 4: লাইভ চালানোর কমান্ড</h3>
+<textarea id="liveStart" readonly></textarea>
+<button class="copy" onclick="copy('liveStart')">Copy</button>
+<p>➡ এখন ভিডিও YouTube লাইভে চলবে।</p>
 </div>
 
 <!-- Step 5 -->
 <div class="box">
-<h3>⛔ Step 5: Stop Live</h3>
-<textarea readonly>Ctrl + C</textarea>
-<button class="copy" onclick="copy('stop')">Copy</button>
+<h3>🔁 ভিডিও বারবার চালাতে চাইলে</h3>
+<textarea id="loopLive" readonly></textarea>
+<button class="copy" onclick="copy('loopLive')">Copy</button>
 </div>
 
 </div>
@@ -116,16 +114,15 @@ textarea{
 function generate(){
     let video=document.getElementById("video").value;
     let key=document.getElementById("key").value;
-    
     let path="/storage/emulated/0/Download/"+video;
 
     document.getElementById("steps").style.display="block";
 
-    // Step 3: Start Live
-    document.getElementById("liveStart").value="ffmpeg -re -i '"+path+"' -c:v libx264 -preset veryfast -b:v 2500k -c:a aac -ar 44100 -b:a 128k -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
+    // Step 4: Start Live
+    document.getElementById("liveStart").value="ffmpeg -re -i \""+path+"\" -c copy -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
 
-    // Step 4: Loop Live
-    document.getElementById("loopLive").value="ffmpeg -stream_loop -1 -re -i '"+path+"' -c:v libx264 -preset veryfast -b:v 2500k -c:a aac -ar 44100 -b:a 128k -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
+    // Step 5: Loop Live
+    document.getElementById("loopLive").value="ffmpeg -re -stream_loop -1 -i \""+path+"\" -c copy -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
 }
 
 // Copy function
