@@ -92,13 +92,13 @@ textarea{
 </div>
 
 <div class="box">
-<h3>Step 5: Start Live</h3>
+<h3>Step 5: Start Live (একবার চালানো)</h3>
 <textarea id="liveStart" readonly></textarea>
 <button class="copy" onclick="copy('liveStart')">Copy</button>
 </div>
 
 <div class="box">
-<h3>Step 6: Loop Live</h3>
+<h3>Step 6: Loop Live (ভিডিও শেষ হলে পুনরায় চালানো)</h3>
 <textarea id="loopLive" readonly></textarea>
 <button class="copy" onclick="copy('loopLive')">Copy</button>
 </div>
@@ -126,11 +126,11 @@ function generate(){
     // Step 2: Video Path
     document.getElementById("videoPath").value="Internal Storage > Download > "+video;
 
-    // Start Live
-    document.getElementById("liveStart").value="ffmpeg -re -i \""+path+"\" -c copy -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
+    // Start Live (একবার)
+    document.getElementById("liveStart").value="ffmpeg -re -stream_loop 0 -i \""+path+"\" -c copy -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
 
-    // Loop Live
-    document.getElementById("loopLive").value="while true; do ffmpeg -re -i \""+path+"\" -c copy -f flv rtmp://a.rtmp.youtube.com/live2/"+key+"; done";
+    // Loop Live (অব্যাহতভাবে ভিডিও পুনরায়)
+    document.getElementById("loopLive").value="ffmpeg -re -stream_loop -1 -i \""+path+"\" -c copy -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
 }
 
 function copy(id){
