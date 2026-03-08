@@ -81,10 +81,12 @@ textarea{
 
 <!-- Step 2 -->
 <div class="box">
-<h3>🔴 Step 2: Video File Location</h3>
-<textarea id="videoInternal" readonly></textarea>
-<button class="copy" onclick="copy('videoInternal')">Copy</button>
+<h3>🔴 Step 2: Check Video File</h3>
+<p>Check the Download folder:</p>
+<textarea id="checkDownload" readonly>ls /storage/emulated/0/Download/</textarea>
+<button class="copy" onclick="copy('checkDownload')">Copy</button>
 
+<p>Video Path:</p>
 <textarea id="videoFullPath" readonly></textarea>
 <button class="copy" onclick="copy('videoFullPath')">Copy</button>
 </div>
@@ -118,13 +120,11 @@ textarea{
 function generate(){
     let video=document.getElementById("video").value;
     let key=document.getElementById("key").value;
+    
     let path="/storage/emulated/0/Download/"+video;
+    document.getElementById("videoFullPath").value=path;
 
     document.getElementById("steps").style.display="block";
-
-    // Step 2
-    document.getElementById("videoInternal").value="Internal Storage > Download > "+video;
-    document.getElementById("videoFullPath").value=path;
 
     // Step 3: Start Live
     document.getElementById("liveStart").value="ffmpeg -re -i '"+path+"' -c:v libx264 -preset veryfast -b:v 2500k -c:a aac -ar 44100 -b:a 128k -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
