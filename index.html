@@ -3,21 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <title>Termux YouTube Live Generator</title>
+
 <style>
+
 body{
-font-family: Arial;
+font-family:Arial;
 background:#0f172a;
 color:white;
 text-align:center;
-padding:40px;
+padding:30px;
 }
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
 input{
-padding:10px;
-width:300px;
+width:90%;
+padding:12px;
 margin:10px;
 border-radius:8px;
 border:none;
 }
+
 button{
 padding:10px 20px;
 margin:10px;
@@ -27,64 +36,158 @@ background:red;
 color:white;
 cursor:pointer;
 }
+
 textarea{
-width:90%;
-height:120px;
-margin-top:15px;
+width:100%;
+height:110px;
+margin-top:10px;
 border-radius:8px;
 padding:10px;
 }
+
+.box{
+background:#1e293b;
+padding:20px;
+margin-top:20px;
+border-radius:10px;
+}
+
+.copybtn{
+background:#22c55e;
+}
+
+#commands{
+display:none;
+}
+
 </style>
 </head>
 
 <body>
 
-<h2>YouTube Live Command Generator</h2>
+<div class="container">
+
+<h2>📺 Termux YouTube Live Command Generator</h2>
 
 <input id="video" placeholder="Video Name (example: abcde.mp4)">
-<br>
 
 <input id="key" placeholder="Stream Key">
+
 <br>
 
-<button onclick="generate()">Generate Command</button>
+<button onclick="generate()">Generate Commands</button>
 
-<h3>Start Live Command</h3>
-<textarea id="cmd1"></textarea>
-<br>
-<button onclick="copy1()">Copy</button>
 
-<h3>Loop Live Command</h3>
-<textarea id="cmd2"></textarea>
-<br>
-<button onclick="copy2()">Copy</button>
+<div id="commands">
+
+
+<div class="box">
+
+<h3>🔧 Step 1: Install Packages</h3>
+
+<textarea id="setup" readonly>
+pkg update && pkg upgrade -y
+pkg install ffmpeg
+termux-setup-storage
+</textarea>
+
+<button class="copybtn" onclick="copy('setup')">Copy</button>
+
+</div>
+
+
+
+<div class="box">
+
+<h3>📂 Step 2: Video Location</h3>
+
+<textarea id="path"></textarea>
+
+<button class="copybtn" onclick="copy('path')">Copy</button>
+
+</div>
+
+
+
+<div class="box">
+
+<h3>🎥 Start Live</h3>
+
+<textarea id="start"></textarea>
+
+<button class="copybtn" onclick="copy('start')">Copy</button>
+
+</div>
+
+
+
+<div class="box">
+
+<h3>🔁 Loop Live</h3>
+
+<textarea id="loop"></textarea>
+
+<button class="copybtn" onclick="copy('loop')">Copy</button>
+
+</div>
+
+
+
+<div class="box">
+
+<h3>⛔ Stop Live</h3>
+
+<textarea id="stop" readonly>
+Press Ctrl + C in Termux
+</textarea>
+
+<button class="copybtn" onclick="copy('stop')">Copy</button>
+
+</div>
+
+
+</div>
+
+</div>
+
 
 <script>
 
 function generate(){
 
 let video=document.getElementById("video").value;
+
 let key=document.getElementById("key").value;
 
-let path='/storage/emulated/0/Download/'+video;
+let path="/storage/emulated/0/Download/"+video;
 
-let cmd1='ffmpeg -re -i "'+path+'" -c copy -f flv rtmp://a.rtmp.youtube.com/live2/'+key;
+document.getElementById("commands").style.display="block";
 
-let cmd2='ffmpeg -re -stream_loop -1 -i "'+path+'" -c copy -f flv rtmp://a.rtmp.youtube.com/live2/'+key;
+document.getElementById("path").value=
+"Internal Storage > Download > "+video+
+"\n\nFull Path:\n"+path;
 
-document.getElementById("cmd1").value=cmd1;
-document.getElementById("cmd2").value=cmd2;
+let start="ffmpeg -re -i '"+path+"' -c copy -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
+
+let loop="ffmpeg -re -stream_loop -1 -i '"+path+"' -c copy -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
+
+document.getElementById("start").value=start;
+
+document.getElementById("loop").value=loop;
 
 }
 
-function copy1(){
-navigator.clipboard.writeText(document.getElementById("cmd1").value);
-alert("Copied Start Command");
-}
+function copy(id){
 
-function copy2(){
-navigator.clipboard.writeText(document.getElementById("cmd2").value);
-alert("Copied Loop Command");
+let text=document.getElementById(id);
+
+text.select();
+text.setSelectionRange(0, 99999);
+
+document.execCommand("copy");
+
+alert("Command Copied");
+
 }
 
 </script>
