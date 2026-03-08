@@ -46,7 +46,7 @@ textarea{width:100%;height:70px;margin-top:10px;border-radius:8px;padding:10px;}
 <p>Internal Storage:</p>
 <textarea id="videoInternal"></textarea>
 <button class="copy" onclick="copy('videoInternal')">Copy</button>
-<p>:</p>
+<p>Path:</p>
 <textarea id="videoFullPath"></textarea>
 <button class="copy" onclick="copy('videoFullPath')">Copy</button>
 </div>
@@ -86,7 +86,7 @@ document.getElementById("steps").style.display="block";
 
 // Step 2: Video Path
 document.getElementById("videoInternal").value="Internal Storage > Download > "+video;
-document.getElementById("videoFullPath").value="Full Path:\n"+path;
+document.getElementById("videoFullPath").value=path;
 
 // Step 3: Start Live
 document.getElementById("liveStart").value="ffmpeg -re -i '"+path+"' -c copy -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
