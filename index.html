@@ -2,202 +2,95 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Termux YouTube Live Guide</title>
-
+<title>Termux YouTube Live Generator</title>
 <style>
-
-body{
-font-family:Arial;
-background:#0f172a;
-color:white;
-padding:30px;
-text-align:center;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-}
-
-input{
-width:90%;
-padding:12px;
-margin:10px;
-border-radius:8px;
-border:none;
-}
-
-button{
-padding:10px 20px;
-margin-top:10px;
-border:none;
-border-radius:8px;
-background:red;
-color:white;
-cursor:pointer;
-}
-
-textarea{
-width:100%;
-height:70px;
-margin-top:10px;
-border-radius:8px;
-padding:10px;
-}
-
-.box{
-background:#1e293b;
-padding:20px;
-margin-top:20px;
-border-radius:10px;
-text-align:left;
-}
-
-.copy{
-background:#22c55e;
-margin-left:10px;
-}
-
-#steps{
-display:none;
-}
-
+body{font-family:Arial;background:#0f172a;color:white;padding:30px;text-align:center;}
+.container{max-width:900px;margin:auto;}
+input{width:90%;padding:12px;margin:10px;border-radius:8px;border:none;}
+button{padding:10px 20px;margin-top:10px;border:none;border-radius:8px;background:red;color:white;cursor:pointer;}
+textarea{width:100%;height:70px;margin-top:10px;border-radius:8px;padding:10px;}
+.box{background:#1e293b;padding:20px;margin-top:20px;border-radius:10px;text-align:left;}
+.copy{background:#22c55e;margin-left:10px;}
+#steps{display:none;}
 </style>
-
 </head>
-
 <body>
-
 <div class="container">
-
 <h2>📺 Termux YouTube Live Step Guide</h2>
-
 <input id="video" placeholder="Video Name (example: abcde.mp4)">
-
 <input id="key" placeholder="Stream Key">
-
 <br>
-
 <button onclick="generate()">Generate Commands</button>
 
 <div id="steps">
 
 <div class="box">
-
 <h3>🔴 Step 1</h3>
-
 <p>Bash</p>
-
 <textarea id="cmd1" readonly>pkg update && pkg upgrade -y</textarea>
-
 <button class="copy" onclick="copy('cmd1')">Copy</button>
-
 <p>তারপর:</p>
-
 <textarea id="cmd2" readonly>pkg install ffmpeg</textarea>
-
 <button class="copy" onclick="copy('cmd2')">Copy</button>
-
 <p>তারপর:</p>
-
 <textarea id="cmd3" readonly>termux-setup-storage</textarea>
-
 <button class="copy" onclick="copy('cmd3')">Copy</button>
-
 <p>📌 Allow চাপুন (স্টোরেজ অ্যাক্সেসের জন্য)</p>
-
 </div>
 
-
-
 <div class="box">
-
 <h3>🔴 Step 2: ভিডিও ফাইল রাখুন</h3>
-
 <p>আপনার ভিডিও রাখতে হবে:</p>
-
 <textarea id="videoPath"></textarea>
-
+<button class="copy" onclick="copy('videoPath')">Copy</button>
 </div>
 
-
-
 <div class="box">
-
-<h3>🔴 Step 3: Live Start</h3>
-
+<h3>🔴 Step 3: Start Live</h3>
 <textarea id="liveStart"></textarea>
-
 <button class="copy" onclick="copy('liveStart')">Copy</button>
-
 </div>
 
-
-
 <div class="box">
-
 <h3>🔁 Step 4: Loop Live</h3>
-
 <textarea id="loopLive"></textarea>
-
 <button class="copy" onclick="copy('loopLive')">Copy</button>
-
 </div>
-
-
 
 <div class="box">
-
 <h3>⛔ Step 5: Stop Live</h3>
-
 <textarea readonly>Ctrl + C</textarea>
-
+<button class="copy" onclick="copy('stop')">Copy</button>
 </div>
 
 </div>
-
 </div>
-
 
 <script>
-
 function generate(){
-
 let video=document.getElementById("video").value;
-
 let key=document.getElementById("key").value;
-
 let path="/storage/emulated/0/Download/"+video;
 
 document.getElementById("steps").style.display="block";
 
-document.getElementById("videoPath").value=
-"Internal Storage > Download > "+video;
+document.getElementById("videoPath").value="Internal Storage > Download > "+video+"\n\nFull Path:\n"+path;
 
 let start="ffmpeg -re -i '"+path+"' -c copy -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
 
-let loop="ffmpeg -re -stream_loop -1 -i '"+path+"' -c copy -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
+let loop="ffmpeg -stream_loop -1 -re -i '"+path+"' -c copy -f flv rtmp://a.rtmp.youtube.com/live2/"+key;
 
 document.getElementById("liveStart").value=start;
-
 document.getElementById("loopLive").value=loop;
-
 }
 
 function copy(id){
-
 let text=document.getElementById(id);
-
 text.select();
 text.setSelectionRange(0,99999);
-
 document.execCommand("copy");
-
 alert("Copied");
-
 }
-
 </script>
-
 </body>
 </html>
