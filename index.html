@@ -85,10 +85,6 @@ textarea{
 <p>Check the Download folder:</p>
 <textarea id="checkDownload" readonly>ls /storage/emulated/0/Download/</textarea>
 <button class="copy" onclick="copy('checkDownload')">Copy</button>
-
-<p>Video Path:</p>
-<textarea id="videoFullPath" readonly></textarea>
-<button class="copy" onclick="copy('videoFullPath')">Copy</button>
 </div>
 
 <!-- Step 3 -->
@@ -122,7 +118,6 @@ function generate(){
     let key=document.getElementById("key").value;
     
     let path="/storage/emulated/0/Download/"+video;
-    document.getElementById("videoFullPath").value=path;
 
     document.getElementById("steps").style.display="block";
 
