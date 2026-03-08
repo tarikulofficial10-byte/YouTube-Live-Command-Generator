@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Termux YouTube Live Generator</title>
+<style>
+body{
+font-family: Arial;
+background:#0f172a;
+color:white;
+text-align:center;
+padding:40px;
+}
+input{
+padding:10px;
+width:300px;
+margin:10px;
+border-radius:8px;
+border:none;
+}
+button{
+padding:10px 20px;
+margin:10px;
+border:none;
+border-radius:8px;
+background:red;
+color:white;
+cursor:pointer;
+}
+textarea{
+width:90%;
+height:120px;
+margin-top:15px;
+border-radius:8px;
+padding:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>YouTube Live Command Generator</h2>
+
+<input id="video" placeholder="Video Name (example: abcde.mp4)">
+<br>
+
+<input id="key" placeholder="Stream Key">
+<br>
+
+<button onclick="generate()">Generate Command</button>
+
+<h3>Start Live Command</h3>
+<textarea id="cmd1"></textarea>
+<br>
+<button onclick="copy1()">Copy</button>
+
+<h3>Loop Live Command</h3>
+<textarea id="cmd2"></textarea>
+<br>
+<button onclick="copy2()">Copy</button>
+
+<script>
+
+function generate(){
+
+let video=document.getElementById("video").value;
+let key=document.getElementById("key").value;
+
+let path='/storage/emulated/0/Download/'+video;
+
+let cmd1='ffmpeg -re -i "'+path+'" -c copy -f flv rtmp://a.rtmp.youtube.com/live2/'+key;
+
+let cmd2='ffmpeg -re -stream_loop -1 -i "'+path+'" -c copy -f flv rtmp://a.rtmp.youtube.com/live2/'+key;
+
+document.getElementById("cmd1").value=cmd1;
+document.getElementById("cmd2").value=cmd2;
+
+}
+
+function copy1(){
+navigator.clipboard.writeText(document.getElementById("cmd1").value);
+alert("Copied Start Command");
+}
+
+function copy2(){
+navigator.clipboard.writeText(document.getElementById("cmd2").value);
+alert("Copied Loop Command");
+}
+
+</script>
+
+</body>
+</html>
